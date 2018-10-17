@@ -1,13 +1,33 @@
 {
-    "produtos": [],
-    "categorias": [
-        {
-            "id": 1,
-            "categoria": "Limpeza"
-        },
-        {
-            "id": 2,
-            "categoria": "Congelados"
-        }
-    ]
+  "produtos": [
+    {
+      "id": 1,
+      "produto": "Sabão",
+      "categoria": 1
+    },
+    {
+      "id": 2,
+      "produto": "Frango Congelado - Tipo Sassami",
+      "categoria": 2
+    },
+    {
+      "id": 2,
+      "produto": "Frango Congelado - Coxa e Sobrecoxa",
+      "categoria": 2
+    }
+  ],
+  "categorias": [
+    {
+      "id": 1,
+      "categoria": "Limpeza"
+    },
+    {
+      "id": 2,
+      "categoria": "Congelados"
+    },
+    {
+      "categoria": "Bebidas",
+      "id": 3
+    }
+  ]
 }

@@ -12,12 +12,16 @@ class Produtos extends Component {
     constructor(props) {
         super(props)
 
+        this.renderCategoria = this.renderCategoria.bind(this)
+        this.handleNewCategoria = this.handleNewCategoria.bind(this)
+        this.loadCategorias = this.loadCategorias.bind(this)
+
         this.state = {
             categorias: []
         }
     }
 
-    componentDidMount() {
+    loadCategorias() {
         axios
             .get('http://localhost:3001/categorias')
             .then(res => {
@@ -27,16 +31,41 @@ class Produtos extends Component {
             })
     }
 
+    componentDidMount() {
+        this.loadCategorias()
+    }
+
+    removeCategoria(categoria) {
+        axios
+            .delete('http://localhost:3001/categorias/' + categoria.id)
+            .then(res => {
+                this.loadCategorias()
+            })
+    }
+
     renderCategoria(cat) {
         return (
             <li key={cat.id}>
+                <button onClick={() => this.removeCategoria(cat)} className='btn btn-sm'>X</button>
                 <Link to={`/produtos/categoria/${cat.id}`}> {cat.categoria}</Link >
             </li>
         )
     }
 
-    render() {
+    handleNewCategoria(key) {
+        if (key.keyCode === 13) {
+            axios
+                .post('http://localhost:3001/categorias', {
+                    categoria: this.refs.categoria.value
+                })
+                .then(res => {
+                    this.refs.categoria.value = ''
+                    this.loadCategorias()
+                })
+        }
+    }
 
+    render() {
         const { match } = this.props
         const { categorias } = this.state
         return (
@@ -46,6 +75,13 @@ class Produtos extends Component {
                     <ul>
                         {categorias.map(this.renderCategoria)}
                     </ul>
+                    <input
+                        onKeyUp={this.handleNewCategoria}
+                        type='text'
+                        className="form-control"
+                        ref='categoria'
+                        placeholder='Nova categoria'
+                    />
                 </div>
                 <div className='col-md-10'>
                     <h3>Produtos</h3>
