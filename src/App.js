@@ -13,12 +13,23 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      categorias: []
+      categorias: [],
+      categoria: null,
+      produtos: []
     }
+
     this.loadCategorias = this.loadCategorias.bind(this)
     this.createCategoria = this.createCategoria.bind(this)
     this.removeCategoria = this.removeCategoria.bind(this)
     this.editCategoria = this.editCategoria.bind(this)
+
+    this.createProduto = this.createProduto.bind(this)
+    this.loadProdutos = this.loadProdutos.bind(this)
+    this.loadCategoria = this.loadCategoria.bind(this)
+
+    this.removeProduto = this.removeProduto.bind(this)
+    this.readProduto = this.readProduto.bind(this)
+    this.editProduto = this.editProduto.bind(this)
   }
 
   loadCategorias() {
@@ -49,6 +60,40 @@ class App extends Component {
       .then(res => {
         this.loadCategorias()
       })
+  }
+
+  createProduto(produto) {
+    return this.props.api.createProduto(produto)
+  }
+
+  loadProdutos(categoria) {
+    this.props.api.loadProdutos(categoria)
+      .then((res) => {
+        this.setState({
+          produtos: res.data
+        })
+      })
+  }
+
+  loadCategoria(categoria) {
+    this.props.api.readCategoria(categoria)
+      .then((res) => {
+        this.setState({
+          categoria: res.data
+        })
+      })
+  }
+
+  removeProduto(produto) {
+    return this.props.api.deleteProduto(produto.id)
+  }
+
+  readProduto(id) {
+    return this.props.api.readProduto(id)
+  }
+
+  editProduto(produto) {
+    return this.props.api.editProduto(produto)
   }
 
   render() {
@@ -85,6 +130,18 @@ class App extends Component {
                 createCategoria={this.createCategoria}
                 editCategoria={this.editCategoria}
                 categorias={this.state.categorias}
+
+                createProduto={this.createProduto}
+                loadProdutos={this.loadProdutos}
+                produtos={this.state.produtos}
+
+                loadCategoria={this.loadCategoria}
+                categoria={this.state.categoria}
+
+                removeProduto={this.removeProduto}
+                readProduto={this.readProduto}
+
+                editProduto={this.editProduto}
               />)
             }
             } />

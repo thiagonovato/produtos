@@ -6,6 +6,8 @@ import {
 
 import ProdutosHome from './ProdutosHome'
 import Categoria from './Categoria'
+import ProdutosNovo from './ProdutosNovo'
+import ProdutosEditar from './ProdutosEditar'
 
 class Produtos extends Component {
     constructor(props) {
@@ -97,11 +99,40 @@ class Produtos extends Component {
                         ref='categoria'
                         placeholder='Nova categoria'
                     />
+                    <Link to={'/produtos/novo'}>Novo produto</Link>
                 </div>
                 <div className='col-md-10'>
                     <h3>Produtos</h3>
                     <Route exact path={match.url} component={ProdutosHome} />
-                    <Route exact path={match.url + '/categoria/:catId'} component={Categoria} />
+                    <Route exact path={match.url + '/novo'}
+                        render={(props) => {
+                            return <ProdutosNovo {...props}
+                                categorias={categorias}
+                                createProduto={this.props.createProduto}
+                            />
+                        }} />
+                    <Route path={match.url + '/editar/:id'}
+                        render={(props) => {
+                            return (
+                                <ProdutosEditar {...props}
+                                    readProduto={this.props.readProduto}
+                                    categorias={categorias}
+                                    editProduto={this.props.editProduto}
+                                />
+                            )
+                        }}
+                    />
+                    <Route exact
+                        path={match.url + '/categoria/:catId'}
+                        render={(props) => {
+                            return <Categoria {...props}
+                                loadProdutos={this.props.loadProdutos}
+                                loadCategoria={this.props.loadCategoria}
+                                produtos={this.props.produtos}
+                                categoria={this.props.categoria}
+                                removeProduto={this.props.removeProduto}
+                            />
+                        }} />
                 </div>
             </div>
         )

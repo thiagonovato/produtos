@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import axios from 'axios'
+import { Link } from 'react-router-dom'
 
 class Categoria extends Component {
     constructor(props) {
@@ -9,26 +9,16 @@ class Categoria extends Component {
 
         this.state = {
             produtos: [],
-            categoria: []
+            categoria: [],
+            id: null
         }
+        this.renderProduto = this.renderProduto.bind(this)
     }
 
     loadData(id) {
-        axios
-            .get('http://localhost:3001/produtos?categoria=' + id)
-            .then(res => {
-                this.setState({
-                    produtos: res.data
-                })
-            })
-
-        axios
-            .get('http://localhost:3001/categorias/' + id)
-            .then(res => {
-                this.setState({
-                    categoria: res.data
-                })
-            })
+        this.setState({ id })
+        this.props.loadProdutos(id)
+        this.props.loadCategoria(id)
     }
 
     componentDidMount() {
@@ -37,20 +27,35 @@ class Categoria extends Component {
     }
 
     componentWillReceiveProps(newProps) {
-        this.loadData(newProps.match.params.catId)
+        if (newProps.match.params.catId !== this.state.id) {
+            this.loadData(newProps.match.params.catId)
+        }
     }
 
     renderProduto(produto) {
         return (
-            <li key={produto.id} className='list-group-item'>{produto.produto}</li>
+            <div>
+                <li key={produto.id} className='list-group-item'>
+                    {produto.produto}
+                    <button
+                        onClick={() => this.props.removeProduto(produto).then((res) => {
+                            this.loadData(this.props.match.params.catId)
+                        })}
+                        className='btn btn-sm'>X</button>
+                    <Link to={'/produtos/editar/' + produto.id}>Editar</Link>
+                </li>
+            </div>
         )
     }
     render() {
         return (
             <div>
-                <h1>{this.state.categoria.categoria}</h1>
+                <h1>
+                    {this.props.categoria && this.props.categoria.categoria}
+                </h1>
                 <ul className='list-group'>
-                    {this.state.produtos.map(this.renderProduto)}
+                    {this.props.produtos.length === 0 && <p className='alert alert-danger'>Nenhum produto cadastrado nesta categoria.</p>}
+                    {this.props.produtos.map(this.renderProduto)}
                 </ul>
             </div>
         )

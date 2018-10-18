@@ -1,37 +1,57 @@
 {
   "produtos": [
     {
-      "id": 1,
-      "produto": "Sabão",
-      "categoria": 1
+      "produto": "Picanha",
+      "categoria": "2",
+      "id": 1
     },
     {
-      "id": 2,
-      "produto": "Frango Congelado - Tipo Sassami",
-      "categoria": 2
+      "produto": "Contra filé",
+      "categoria": "2",
+      "id": 2
     },
     {
-      "id": 2,
-      "produto": "Frango Congelado - Coxa e Sobrecoxa",
-      "categoria": 2
-    }
-  ],
-  "categorias": [
-    {
-      "id": 1,
-      "categoria": "Limpeza"
-    },
-    {
-      "id": 2,
-      "categoria": "Congelados"
-    },
-    {
-      "categoria": "Bebidas",
+      "produto": "Alcatra",
+      "categoria": "2",
       "id": 3
     },
     {
       "id": 4,
-      "categoria": "teasdf ads f"
+      "produto": "Maminha",
+      "categoria": "2"
+    },
+    {
+      "produto": "Pão",
+      "categoria": "4",
+      "id": 5
+    },
+    {
+      "id": 6,
+      "produto": "Cupim Grill",
+      "categoria": "2"
+    },
+    {
+      "id": 7,
+      "produto": "Pão sovado",
+      "categoria": "4"
+    }
+  ],
+  "categorias": [
+    {
+      "categoria": "Limpeza",
+      "id": 1
+    },
+    {
+      "categoria": "Açougue",
+      "id": 2
+    },
+    {
+      "id": 3,
+      "categoria": "Frios"
+    },
+    {
+      "categoria": "Padaria",
+      "id": 4
     }
   ]
 }
