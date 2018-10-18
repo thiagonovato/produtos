@@ -10,6 +10,47 @@ import Produtos from './Produtos'
 import Sobre from './Sobre'
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      categorias: []
+    }
+    this.loadCategorias = this.loadCategorias.bind(this)
+    this.createCategoria = this.createCategoria.bind(this)
+    this.removeCategoria = this.removeCategoria.bind(this)
+    this.editCategoria = this.editCategoria.bind(this)
+  }
+
+  loadCategorias() {
+    this.props.api.loadCategorias()
+      .then(res => {
+        this.setState({
+          categorias: res.data
+        })
+      })
+  }
+
+  removeCategoria(categoria) {
+    this.props.api.deleteCategorias(categoria.id)
+      .then(res => {
+        this.loadCategorias()
+      })
+  }
+
+  createCategoria(categoria) {
+    this.props.api.createCategoria(categoria)
+      .then(res => {
+        this.loadCategorias()
+      })
+  }
+
+  editCategoria(categoria) {
+    this.props.api.editCategoria(categoria)
+      .then(res => {
+        this.loadCategorias()
+      })
+  }
+
   render() {
     return (
       <Router>
@@ -37,7 +78,16 @@ class App extends Component {
           </nav>
           <div className='container'>
             <Route exact path='/' component={Home} />
-            <Route path='/produtos' component={Produtos} />
+            <Route path='/produtos' render={(props) => {
+              return (<Produtos {...props}
+                loadCategorias={this.loadCategorias}
+                removeCategoria={this.removeCategoria}
+                createCategoria={this.createCategoria}
+                editCategoria={this.editCategoria}
+                categorias={this.state.categorias}
+              />)
+            }
+            } />
             <Route exact path='/sobre' component={Sobre} />
           </div>
         </div>

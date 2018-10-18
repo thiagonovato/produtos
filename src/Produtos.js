@@ -3,7 +3,6 @@ import {
     Route,
     Link
 } from 'react-router-dom'
-import axios from 'axios'
 
 import ProdutosHome from './ProdutosHome'
 import Categoria from './Categoria'
@@ -12,67 +11,83 @@ class Produtos extends Component {
     constructor(props) {
         super(props)
 
+        this.state = {
+            editingCategoria: ''
+        }
+
+        this.cancelEditing = this.editCategoria.bind(this)
+        this.editCategoria = this.editCategoria.bind(this)
         this.renderCategoria = this.renderCategoria.bind(this)
         this.handleNewCategoria = this.handleNewCategoria.bind(this)
-        this.loadCategorias = this.loadCategorias.bind(this)
-
-        this.state = {
-            categorias: []
-        }
-    }
-
-    loadCategorias() {
-        axios
-            .get('http://localhost:3001/categorias')
-            .then(res => {
-                this.setState({
-                    categorias: res.data
-                })
-            })
+        this.handleEditCategoria = this.handleEditCategoria.bind(this)
     }
 
     componentDidMount() {
-        this.loadCategorias()
+        this.props.loadCategorias()
     }
 
-    removeCategoria(categoria) {
-        axios
-            .delete('http://localhost:3001/categorias/' + categoria.id)
-            .then(res => {
-                this.loadCategorias()
-            })
+    editCategoria(categoria) {
+        this.setState({
+            editingCategoria: categoria.id
+        })
+    }
+
+    cancelEditing() {
+        this.setState({
+            editingCategoria: ''
+        })
     }
 
     renderCategoria(cat) {
         return (
             <li key={cat.id}>
-                <button onClick={() => this.removeCategoria(cat)} className='btn btn-sm'>X</button>
-                <Link to={`/produtos/categoria/${cat.id}`}> {cat.categoria}</Link >
+                {this.state.editingCategoria === cat.id &&
+                    <div className='input-group'>
+                        <div className='input-group-btn'>
+                            <input ref={'cat-' + cat.id} onKeyUp={this.handleEditCategoria} type='text' defaultValue={cat.categoria} className="form-control" />
+                            <button className='btn' onClick={this.cancelEditing}>cancel</button>
+                        </div>
+                    </div>
+                }
+                {this.state.editingCategoria !== cat.id &&
+                    <div>
+                        <button onClick={() => this.props.removeCategoria(cat)} className='btn btn-sm'>X</button>
+                        <button onClick={() => this.editCategoria(cat)} className='btn btn-sm'>L</button>
+                        <Link to={`/produtos/categoria/${cat.id}`}> {cat.categoria}</Link >
+                    </div>
+                }
             </li>
         )
     }
 
     handleNewCategoria(key) {
         if (key.keyCode === 13) {
-            axios
-                .post('http://localhost:3001/categorias', {
-                    categoria: this.refs.categoria.value
-                })
-                .then(res => {
-                    this.refs.categoria.value = ''
-                    this.loadCategorias()
-                })
+            this.props.createCategoria({
+                categoria: this.refs.categoria.value
+            })
+            this.refs.categoria.value = ''
+        }
+    }
+
+    handleEditCategoria(key) {
+        if (key.keyCode === 13) {
+            this.props.editCategoria({
+                id: this.state.editingCategoria,
+                categoria: this.refs['cat-' + this.state.editingCategoria].value
+            })
+            this.setState({
+                editingCategoria: ''
+            })
         }
     }
 
     render() {
-        const { match } = this.props
-        const { categorias } = this.state
+        const { match, categorias } = this.props
         return (
             <div className='row'>
                 <div className='col-md-2'>
                     <h3>Categorias</h3>
-                    <ul>
+                    <ul style={{ listStyle: 'none', padding: 0 }}>
                         {categorias.map(this.renderCategoria)}
                     </ul>
                     <input
